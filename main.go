@@ -2,21 +2,26 @@ package main
 
 import (
 	"fmt"
-	"time"
 )
 
-func printSalam(text string) {
-	for i := 0; i < 5; i++ {
-		time.Sleep(100 * time.Millisecond)
-		fmt.Println(text)
+func main() {
+	chann := make(chan string) //channel
+
+	go runChannel("Salam", chann)
+
+	for msg := range chann {
+		fmt.Println(msg)
 	}
 }
 
-func main() {
-	start := time.Now() //cel kecepatan proses
+func runChannel(text string, c chan string) {
+	for i := 0; i < 5; i++ {
+		c <- text
+	}
 
-	go printSalam("Selamat Datang !") //goroutine ditandai dengan code go di awal func
-	printSalam("Selamat Jalan")
-
-	fmt.Println(time.Since(start)) //cek kecepatan proses
+	close(c)
 }
+
+//===== Menutup Channel =====
+/*Casenya memiliki channel yang berulang 5 kali dan di dalam main
+channelnya berulang tanpa batas*/
