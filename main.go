@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 //Declare global itemschannel
 var itemsChannel = make(chan string)
@@ -10,6 +13,8 @@ func main() {
 
 	go menyelam(items)
 	go membersihkan()
+
+	time.Sleep(500 * time.Millisecond)
 }
 
 func menyelam(items [7]string) {
