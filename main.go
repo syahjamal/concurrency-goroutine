@@ -1,31 +1,34 @@
 package main
 
-import (
-	"fmt"
-	"time"
-)
+import "fmt"
 
-func printAngka() {
-	for i := 0; i < 5; i++ {
-		time.Sleep(200 * time.Millisecond)
-		fmt.Println(i)
-	}
-}
-
-func printText() {
-	for i := 0; i < 5; i++ {
-		time.Sleep(200 * time.Millisecond)
-		fmt.Println("text ", i)
-	}
-}
+//Declare global itemschannel
+var itemsChannel = make(chan string)
 
 func main() {
-	start := time.Now() //cel kecepatan proses
+	items := [7]string{"batu", "harta", "kerang", "harta", "batu", "kerang"}
 
-	go printAngka()
-	go printText()
-
-	time.Sleep(1000 * time.Millisecond)
-
-	fmt.Println(time.Since(start)) //cek kecepatan proses
+	go menyelam(items)
+	go membersihkan()
 }
+
+func menyelam(items [7]string) {
+	for _, item := range items {
+		if item == "harta" {
+			fmt.Println("Berhasil mendapatkan " + item)
+			itemsChannel <- item
+		}
+	}
+}
+
+func membersihkan() {
+	for rawItem := range itemsChannel {
+		fmt.Println("berhasil membersihkan " + rawItem)
+	}
+}
+
+//=====Konsep Channel=====
+//Kita mau menyelam mencari harta karun,
+//terselip diantara banyak barang
+//Yang bertugas di kapal
+//1.Dicari, 2. Dibersihkan, 3.Disimpan oleh penyelam
