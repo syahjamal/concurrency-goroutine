@@ -2,26 +2,28 @@ package main
 
 import (
 	"fmt"
+	"sync"
 )
 
 func main() {
-	chann := make(chan string) //channel
+	var wg sync.WaitGroup
+	//Add (Berapa go routin)
+	//Wait (Menunggu go routine)
+	//Done
+	wg.Add(2)
+	go printText("Salam", &wg)
+	go printText("Hallo", &wg)
 
-	go runChannel("Salam", chann)
-
-	for msg := range chann {
-		fmt.Println(msg)
-	}
+	wg.Wait()
 }
 
-func runChannel(text string, c chan string) {
+func printText(text string, wg *sync.WaitGroup) {
 	for i := 0; i < 5; i++ {
-		c <- text
+		fmt.Println(text)
 	}
-
-	close(c)
+	wg.Done()
 }
 
-//===== Menutup Channel =====
+//===== Wait Go routine with sync waitgroup =====
 /*Casenya memiliki channel yang berulang 5 kali dan di dalam main
 channelnya berulang tanpa batas*/
